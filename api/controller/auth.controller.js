@@ -1,7 +1,7 @@
 import User from "../models/user.models.js";
 import bcryptjs from 'bcryptjs'
 
-export const signup = async (req,res)=>{
+export const signup = async (req,res,next)=>{
 
     let newUser=undefined
     try{        
@@ -11,7 +11,7 @@ export const signup = async (req,res)=>{
     }
     catch(error) {
         console.log("error creating user")
-        res.status(401).json(error.messaage)
+        res.status(500).json(error.messaage)
     }
 
     try{
@@ -20,6 +20,6 @@ export const signup = async (req,res)=>{
     }
     catch(error){
         console.log("error saving a new user")
-        res.status(401).json(error.message)
+        next(error)
     }
 }
