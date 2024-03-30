@@ -26,3 +26,4 @@ dist-ssr
 
 # User created file
 learn.txt
+.env
