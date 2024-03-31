@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUserStart,updateUserSuccess, updateUserFailure } from '../redux/user/userSlice'
 import { deleteUserStart,deleteUserSuccess, deleteUserFailure } from '../redux/user/userSlice'
+import { signOut } from '../redux/user/userSlice'
 
 const Profile = () => {
   const [formData, setFormData] = useState({})
@@ -52,6 +53,18 @@ const Profile = () => {
       dispatch(deleteUserFailure(error))  
     }
   }
+
+  const handleSignout = async()=>{
+    try{
+      await fetch("/api/auth/signout",{method: "GET"})
+      dispatch(signOut())
+    }
+    catch(error){
+      console.log(error)  
+    }
+  }
+
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -61,7 +74,7 @@ const Profile = () => {
         <button>{loading ? "Loading" : "Update"}</button>
       </form>
       <p onClick={handleDelete}>Delete Account</p>
-      <p>Log Out</p>
+      <p onClick={handleSignout}>Sign Out</p>
       <p>{error ? error.message || "Internal Server Error" : ""}</p>
       <p>{isUpdateSuccess && "User updated Successfully"}</p>
     </div>
