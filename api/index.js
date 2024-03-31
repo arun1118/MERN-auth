@@ -1,9 +1,11 @@
 import express from "express";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 import dotenv from 'dotenv'
 dotenv.config()
 
 import authRoutes from './routes/auth.route.js'
+import userRoutes from './routes/user.route.js'
 
 mongoose
 .connect(process.env.MONGODB_URL)
@@ -17,7 +19,9 @@ mongoose
 const app=express()
 
 // app.use are run sequentially, so when we do a next() in /api/auth it then goes to the error mimddleware
+app.use(cookieParser())
 app.use(express.json())
+app.use("/api/user",userRoutes);
 app.use("/api/auth",authRoutes);
 
 // error middleware
