@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUserStart,updateUserSuccess, updateUserFailure } from '../redux/user/userSlice'
+import { deleteUserStart,deleteUserSuccess, deleteUserFailure } from '../redux/user/userSlice'
 
 const Profile = () => {
   const [formData, setFormData] = useState({})
@@ -36,6 +37,21 @@ const Profile = () => {
       dispatch(updateUserFailure(error))
     }
   }
+
+  const handleDelete = async()=>{
+    try{
+      dispatch(deleteUserStart())
+      const res = await fetch(`/api/user/delete/${currentUser._id}`,{method: "DELETE"})
+      const resData = res.json()
+      if(resData.success === false){
+        dispatch(deleteUserFailure(resData))
+      }
+      dispatch(deleteUserSuccess(resData))
+    }
+    catch(error){
+      dispatch(deleteUserFailure(error))  
+    }
+  }
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -44,6 +60,8 @@ const Profile = () => {
         <input type="password" id="password" onChange={handleChange}/>
         <button>{loading ? "Loading" : "Update"}</button>
       </form>
+      <p onClick={handleDelete}>Delete Account</p>
+      <p>Log Out</p>
       <p>{error ? error.message || "Internal Server Error" : ""}</p>
       <p>{isUpdateSuccess && "User updated Successfully"}</p>
     </div>
